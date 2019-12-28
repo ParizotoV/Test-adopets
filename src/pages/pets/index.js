@@ -2,7 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { usePetsApi } from '../../api';
 import { Redirect } from 'react-router-dom';
 
+import { Row, Col, Dropdown, Button } from 'antd';
+
+import './pets.css'
+
 const Pets = () => {
+
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(prev => !prev)
+  }
 
   const { postData, postPets } = usePetsApi('pet/search')
 
@@ -57,7 +67,7 @@ const Pets = () => {
     }
   })
 
-  const getPets = async() => {
+  const getPets = async () => {
     await postPets(pets);
   }
 
@@ -65,8 +75,22 @@ const Pets = () => {
     return <Redirect to='/login' />
   }
 
+
+
   return (
-    <h1>Pets</h1>
+    <React.Fragment>
+      <div>
+        <Row>
+          <Col span={18} offset={3}>
+            <div>
+              <Dropdown overlay={} trigger={['click']}>
+                <Button onChange={handleOpen} />
+              </Dropdown>
+            </div>
+          </Col>
+        </Row>
+      </div>
+    </React.Fragment>
   )
 
 }
