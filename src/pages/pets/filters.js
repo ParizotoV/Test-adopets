@@ -1,14 +1,10 @@
 import React from 'react';
 
-import {
-  lodashGet
-} from '../../utils';
-
 import { Menu } from 'antd';
 
 export const filterSex = ({ handleChangeFilter }) => (
-  <Menu onClick={(key) => handleChangeFilter("sex_key", key.key)}>
-    <Menu.Item key="ALL">
+  <Menu onClick={(key) => handleChangeFilter("sex_key", key)}>
+    <Menu.Item key="ALL" className='optionDefault'>
       All genders
     </Menu.Item>
     <Menu.Item key="MALE">
@@ -21,9 +17,12 @@ export const filterSex = ({ handleChangeFilter }) => (
 )
 
 export const filterSize = ({ handleChangeFilter }) => (
-  <Menu onClick={(key) => handleChangeFilter("size_key", key.key)}>
-    <Menu.Item key="ALL" >
+  <Menu onClick={(key) => handleChangeFilter("size_key", key)}>
+    <Menu.Item key="ALL" className='optionDefault'>
       All genders
+    </Menu.Item>
+    <Menu.Item key="XS">
+      Extra Small
     </Menu.Item>
     <Menu.Item key="S">
       Small
@@ -41,9 +40,9 @@ export const filterSize = ({ handleChangeFilter }) => (
 )
 
 export const filterAge = ({ handleChangeFilter }) => (
-  <Menu onClick={(key) => handleChangeFilter("age_key", key.key)} >
-    <Menu.Item key="ALL">
-      All genders
+  <Menu onClick={(key) => handleChangeFilter("age_key", key)} >
+    <Menu.Item key="ALL" className='optionDefault'>
+      All ages
     </Menu.Item>
     <Menu.Item key="BABY">
       Baby
@@ -59,17 +58,3 @@ export const filterAge = ({ handleChangeFilter }) => (
     </Menu.Item>
   </Menu>
 )
-
-export const filterOrder = ({ handleChangeOrder, formItem }) => {
-  const fields = lodashGet(formItem, 'search._fields')
-  return (
-    <Menu onClick={(key) => handleChangeOrder("sort", key.key)}>
-      <Menu.Item key={`${fields[3]}`}>
-        ASC - NAME
-      </Menu.Item>
-      <Menu.Item key={`-${fields[3]}`}>
-        DESC - NAME
-      </Menu.Item>
-    </Menu>
-  )
-}

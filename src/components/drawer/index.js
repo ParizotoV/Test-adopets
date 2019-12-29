@@ -9,7 +9,7 @@ const CustomDrawer = ({ pet, open, handleChangeOpen }) => {
   return (
     <React.Fragment>
       <Drawer
-        width={640}
+        width={400}
         placement="right"
         closable={false}
         onClose={handleChangeOpen}

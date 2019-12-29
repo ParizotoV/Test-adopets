@@ -1,30 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { usePetsApi } from '../../api';
-import { Redirect } from 'react-router-dom';
 
 import {
   lodashGet,
-  lodashMap
+  lodashMap,
+  lodashIsNil
 } from '../../utils'
+import { Redirect } from 'react-router-dom';
 
-import { Row, Col, Dropdown, Button, Pagination, Card, Tag, Typography } from 'antd';
-import { filterSex, filterSize, filterAge, filterOrder } from './filters';
-import Drawer from '../../components/drawer'
+import { usePetsApi } from '../../api';
 
-const { Title } = Typography;
+import { Row, Col, Dropdown, Button, Pagination, Card, Empty, Spin, Divider, Tag } from 'antd';
+import { filterSex, filterSize, filterAge } from './filters';
+import Drawer from '../../components/drawer';
 
 const Pets = () => {
   const { postData, postPets } = usePetsApi('pet/search')
-
   const [open, setOpen] = useState(false)
-
   const [filter, setFilter] = useState({
     sex_key: '',
     size_key: '',
     age_key: '',
-
   })
-
   const [formItem, setFormItem] = useState({
     "search": {
       "_fields": [
@@ -87,9 +83,11 @@ const Pets = () => {
   }
 
   const handleChangeFilter = (field, key) => {
-    if (key !== 'ALL') {
-      setFormItem(prev => ({ ...prev, search: { ...prev.search, [field]: key } }))
-      setFilter(prev => ({ ...prev, [field]: key }))
+    const name = lodashGet(key, 'item.props.children')
+    const value = lodashGet(key, 'key')
+    if (value !== 'ALL') {
+      setFormItem(prev => ({ ...prev, search: { ...prev.search, [field]: value } }))
+      setFilter(prev => ({ ...prev, [field]: name }))
       setFormItem(prev => ({ ...prev, options: { ...prev.options, page: 1 } }))
     } else {
       let newFormItem = formItem;
@@ -99,22 +97,26 @@ const Pets = () => {
       setFilter(prev => ({ ...prev, [field]: '' }))
     }
   }
-
   const handleChangePage = epage => {
     setFormItem(prev => ({ ...prev, options: { ...prev.options, page: epage } }))
   }
-
   const handleChangeOrder = (field, key) => {
     setFormItem(prev => ({ ...prev, options: { ...prev.options, [field]: [key] } }))
   }
-
   const handleChangeOpen = () => {
     setOpen(prev => !prev)
   }
 
   const listPets = lodashGet(postData, 'data.result')
 
-  if (localStorage.getItem('token') === null) {
+  const page = lodashGet(postData, 'data.page')
+  const totalPage = lodashGet(postData, 'data.pages')
+  const count = lodashGet(postData, 'data.count')
+  const loading = lodashGet(postData, 'loading')
+
+  console.log(postData)
+
+  if (lodashIsNil(localStorage.getItem('token'))) {
     return <Redirect to='/login' />
   }
 
@@ -123,51 +125,55 @@ const Pets = () => {
       <div>
         <Row>
           <Col span={18} offset={3}>
-            <div style={{ padding: '10px' }}>
-              <Dropdown overlay={filterSex({ handleChangeFilter })} trigger={['click']} className='button_filter'>
+            <div style={{ padding: '10px', marginTop: '15px' }}>
+              <Dropdown overlay={filterSex({ handleChangeFilter })} className='button_filter'>
                 <Button>
                   {filter.sex_key !== '' ? filter.sex_key : 'All genders'}
                 </Button>
               </Dropdown>
               <span style={{ marginLeft: '10px' }} />
-              <Dropdown overlay={filterSize({ handleChangeFilter })} trigger={['click']} className='button_filter'>
-                <Button>
-                  {filter.size_key !== '' ? filter.size_key : 'All sizes'}
-                </Button>
-              </Dropdown>
-              <span style={{ marginLeft: '10px' }} />
-              <Dropdown overlay={filterAge({ handleChangeFilter })} trigger={['click']} className='button_filter'>
+              <Dropdown overlay={filterAge({ handleChangeFilter })} className='button_filter'>
                 <Button>
                   {filter.age_key !== '' ? filter.age_key : 'All ages'}
                 </Button>
               </Dropdown>
+              <span style={{ marginLeft: '10px' }} />
+              <Dropdown overlay={filterSize({ handleChangeFilter })} className='button_filter'>
+                <Button>
+                  {filter.size_key !== '' ? filter.size_key : 'All sizes'}
+                </Button>
+              </Dropdown>
             </div>
+            <Divider />
             <div>
               <Row gutter={[16, 16]}>
-                {lodashMap(listPets, pet => (
-                  <Col span={6}>
-                    <Card style={{ borderRadius: '5px', height: '180px', cursor: 'pointer' }} onClick={console.log('clicked')}>
-                      <div style={{ padding: '8px' }}>
-                        <Title level={4}>{pet.name}</Title>
-                        {pet.specie.name} | {pet.breed_primary.name}
-                      </div>
-                      <div style={{ display: 'inline' }}>
-                        <Tag style={{ borderRadius: '15px', fontSize: '8px' }}>{pet.sex_key}</Tag>
-                        <Tag style={{ borderRadius: '15px', fontSize: '8px' }}>{pet.size_key}</Tag>
-                        <Tag style={{ borderRadius: '15px', fontSize: '8px' }}>{pet.age_key}</Tag>
-                      </div>
-                      <a onClick={handleChangeOpen}>
-                        View Profile
-                      </a>
-                      <Drawer handleChangeOpen={handleChangeOpen} pet={pet} open={open} />
-                    </Card>
+                {count === 0 && !loading && <Empty />}
+                {loading && (
+                  <Col span={4} offset={10} style={{ textAlign: 'center' }}>
+                    <Spin size='large' />
                   </Col>
-                ))}
+                )}
+                {!loading && (
+                  lodashMap(listPets, pet => (
+                    <Col span={6} key={pet.id}>
+                      <Card className='card' onClick={handleChangeOpen}>
+                        <div className='title'>{pet.name}</div>
+                        <div className="content"><b>{pet.specie.name}</b> | {pet.breed_primary.name}</div>
+                        <div>
+                          <Tag className='tags'>{pet.sex_key}</Tag>
+                          <Tag className='tags'>{pet.size_key}</Tag>
+                          <Tag className='tags'>{pet.age_key}</Tag>
+                        </div>
+                        <Drawer pet={pet} open={open} handleChangeOpen={handleChangeOpen} />
+                      </Card>
+                    </Col>
+                  ))
+                )}
               </Row>
             </div>
           </Col>
           <Col span={4} offset={10} style={{ textAlign: 'center' }}>
-            <Pagination size="small" current={postData.data.page} total={postData.data.pages * 10} onChange={(key) => handleChangePage(key)} />
+            {count > 0 && !loading && <Pagination size='small' current={page} total={totalPage * 10} onChange={(page) => handleChangePage(page)} />}
           </Col>
         </Row>
       </div>

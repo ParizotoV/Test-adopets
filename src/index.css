@@ -8,10 +8,16 @@ body {
   background-color: #f8f9fa !important;
 }
 
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
 .ant-layout {
   background-color: inherit !important;
 }
 
+/* PAGE LOGIN */
 .content_login {
   width: 350px;
   max-Height: 400px;
@@ -23,10 +29,37 @@ body {
   background-color: white;
 }
 
+
+/* PAGE PETS */
 .button_filter {
   width: 100px !important;
 }
+.title {
+  font-size: 18pt;
+  font-weight: 700;
+}
+.content {
+  font-size: 10pt;
+  height: 40px;
+  margin-top: 10px;
+}
+.card {
+  border-radius: 5px;
+}
+.card:hover {
+  background-color: #096dd9 !important;
+  color: #fff !important;
+}
+.optionDefault {
+  color: #dcdcdc;
+}
 
+.tags {
+  font-size: 9px;
+  border-radius: 15px;
+}
+
+/* DRAWER COMPONENT */
 .drawer_p {
   font-size: 16 !important;
   color: rgba(0,0,0,0.85);
@@ -35,7 +68,10 @@ body {
   margin-bottom: 16 !important;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* HEADER COMPONENT */
+.appbar {
+  z-index: 1;
+  width: 100%;
+  background-color: #fff;
+  box-shadow: 0 4px 15px rgba(200,200,210,.3);
 }

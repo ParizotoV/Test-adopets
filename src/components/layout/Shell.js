@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
 import { Layout, Button } from 'antd';
-import 'antd/dist/antd.css';
 
 const { Header, Content } = Layout;
 
@@ -25,12 +24,12 @@ const Shell = ({ children }) => {
 
   return (
     <Layout>
-      <Header style={{ zIndex: 1, width: '100%', backgroundColor: 'white', boxShadow: '0 4px 15px rgba(200,200,210,.3)' }}>
+      <Header className='appbar'>
         <div style={{ display: 'inline' }}>
-          Test AdoPets
+          ADOPETS
           <div style={{ float: 'right' }}>
             {logado && (
-              <Button shape="circle" icon="logout" size={20} onClick={logout} />
+              <Button shape='circle' icon='logout' onClick={logout} title='Logout' />
             )}
           </div>
         </div>
