@@ -8,6 +8,33 @@ body {
   background-color: #f8f9fa !important;
 }
 
+.ant-layout {
+  background-color: inherit !important;
+}
+
+.content_login {
+  width: 350px;
+  max-Height: 400px;
+  padding: 15px;
+  border: 1px solid rgba(211,211,211,0.5);
+  border-Radius: 5px;
+  text-Align: center;
+  margin-Top: 100px;
+  background-color: white;
+}
+
+.button_filter {
+  width: 100px !important;
+}
+
+.drawer_p {
+  font-size: 16 !important;
+  color: rgba(0,0,0,0.85);
+  line-height: 24px;
+  display: block;
+  margin-bottom: 16 !important;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
